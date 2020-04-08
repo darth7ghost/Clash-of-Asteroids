@@ -5,6 +5,10 @@
  */
 package Main;
 
+import GameObjects.Constants;
+import Graphics.Assets;
+import Input.KeyBoard;
+import States.GameState;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -19,7 +23,7 @@ import javax.swing.JFrame;
  * @author Oscar Sierra
  */
 public class Window extends javax.swing.JFrame implements Runnable{
-    public static final int WIDHT = 800, HEIGHT = 600;
+    public static final int WIDTH = 800, HEIGHT = 600;
     private Canvas canvas;
     private Thread thread;
     private boolean running = false;
@@ -29,6 +33,8 @@ public class Window extends javax.swing.JFrame implements Runnable{
     private double TARGETTIME = 1000000000/FPS;
     private double delta = 0;
     private int AVERAGEFPS = FPS;
+    private GameState gameState;
+    private KeyBoard keyBoard;
     /**
      * Creates new form Window
      */
@@ -38,13 +44,15 @@ public class Window extends javax.swing.JFrame implements Runnable{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
-        setVisible(true);
         canvas = new Canvas();
-        canvas.setPreferredSize(new Dimension(WIDHT, HEIGHT));
-        canvas.setMaximumSize(new Dimension(WIDHT, HEIGHT));
-        canvas.setMinimumSize(new Dimension(WIDHT, HEIGHT));
+        keyBoard = new KeyBoard();
+        canvas.setPreferredSize(new Dimension(Constants.WIDTH, Constants.HEIGHT));
+        canvas.setMaximumSize(new Dimension(Constants.WIDTH, Constants.HEIGHT));
+        canvas.setMinimumSize(new Dimension(Constants.WIDTH, Constants.HEIGHT));
         canvas.setFocusable(true);
         add(canvas);
+        canvas.addKeyListener(keyBoard);
+        setVisible(true);
     }
 
     /**
@@ -57,17 +65,21 @@ public class Window extends javax.swing.JFrame implements Runnable{
     private void initComponents() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(204, 204, 204));
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setPreferredSize(new java.awt.Dimension(800, 600));
+        setResizable(false);
         setSize(new java.awt.Dimension(800, 600));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 600, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 500, Short.MAX_VALUE)
         );
 
         pack();
@@ -99,7 +111,7 @@ public class Window extends javax.swing.JFrame implements Runnable{
 //            java.util.logging.Logger.getLogger(Window.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        }
         //</editor-fold>
-
+        
         /* Create and display the form */
 //        java.awt.EventQueue.invokeLater(new Runnable() {
 //            public void run() {
@@ -109,25 +121,35 @@ public class Window extends javax.swing.JFrame implements Runnable{
         new Window().start();
     }
     
-    int x=0;
     private void update(){
-        x++;
+        keyBoard.update();
+        gameState.update();
     }
     
     private void draw(){
-        bs = canvas.getBufferStrategy();
-        if(bs == null){
-            canvas.createBufferStrategy(3);
-            return;
+        if(bs==null) {
+            createBufferStrategy(3);
+            bs=getBufferStrategy();
         }
         g = bs.getDrawGraphics();
         //-------------------------------------------
-            g.clearRect(0, 0, WIDTH, HEIGHT);
-            g.drawString(""+AVERAGEFPS, 100, 100);
-            g.setColor(Color.black);
+            //g.clearRect(0,0,getSize().width,getSize().height);
+            g.clearRect(0, 0,WIDTH,HEIGHT);
+            g.setColor(Color.BLACK);
+            g.fillRect(0,0,WIDTH,HEIGHT);
+            //g.drawImage(Assets.player, 100, 100, null);
+            gameState.draw(g);
+            g.setColor(Color.WHITE);
+            g.drawString("FPS: "+AVERAGEFPS, 20, 575);
         //-------------------------------------------
         g.dispose();
         bs.show();
+        //repaint();
+    }
+    
+    private void init(){
+        Assets.init();
+        gameState = new GameState();
     }
     
     @Override
@@ -136,6 +158,7 @@ public class Window extends javax.swing.JFrame implements Runnable{
         long lastTime = System.nanoTime();
         int frames = 0;
         long time = 0;
+        init();
         while(running){
             now = System.nanoTime();
             delta += (now - lastTime)/TARGETTIME;

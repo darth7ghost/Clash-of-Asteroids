@@ -29,20 +29,18 @@ public class Loader {
     public static Font loadFont(String path, int size){
         try {
             return Font.createFont(Font.TRUETYPE_FONT, Loader.class.getResourceAsStream(path)).deriveFont(Font.PLAIN, size);
-        } catch (FontFormatException ex) {
-            Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+        } catch (FontFormatException | IOException ex) {
             Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
     
-    public static Clip loadSound(String path) throws LineUnavailableException{
+    public static Clip loadSound(String path){
         try {
             Clip clip = AudioSystem.getClip();
             clip.open(AudioSystem.getAudioInputStream(Loader.class.getResource(path)));
             return clip;
-        } catch (UnsupportedAudioFileException | IOException ex) {
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
             Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;

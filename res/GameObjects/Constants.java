@@ -32,4 +32,9 @@ public class Constants {
     public static double ENEMY_ANGLE_RANGE = Math.PI/2;
     public static final int ENEMY_SCORE = 50;
     
+    //GUI
+    public static final String PLAY1 = "1 JUGADOR";
+    public static final String PLAY2 = "2 JUGADORES";
+    public static final String ABOUT = "ACERCA DE";
+    public static final String EXIT = "SALIR";
 }

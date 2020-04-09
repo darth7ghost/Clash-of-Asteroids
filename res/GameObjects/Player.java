@@ -34,7 +34,7 @@ public class Player extends MovingObject {
         fireRate = new Chronometer();
         spawnTime = new Chronometer();
         flickerTime = new Chronometer();
-        shoot = new Sound(Assets.playerShoot);
+        //shoot = new Sound(Assets.playerShoot);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class Player extends MovingObject {
                     heading, 10, angle, Assets.blueLaser, gameState
             ));
             fireRate.run(Constants.FIRERATE);
-            shoot.play();
+            //shoot.play();
         }
         if(KeyBoard.RIGHT){
             angle+=DELTAANGLE;

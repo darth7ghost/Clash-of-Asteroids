@@ -8,7 +8,10 @@ package Main;
 import GameObjects.Constants;
 import Graphics.Assets;
 import Input.KeyBoard;
+import Input.MouseInput;
 import States.GameState;
+import States.MenuState;
+import States.State;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -23,7 +26,7 @@ import javax.swing.JFrame;
  * @author Oscar Sierra
  */
 public class Window extends javax.swing.JFrame implements Runnable{
-    public static final int WIDTH = 800, HEIGHT = 600;
+    //public static final int WIDTH = 800, HEIGHT = 600;
     private Canvas canvas;
     private Thread thread;
     private boolean running = false;
@@ -33,8 +36,8 @@ public class Window extends javax.swing.JFrame implements Runnable{
     private double TARGETTIME = 1000000000/FPS;
     private double delta = 0;
     private int AVERAGEFPS = FPS;
-    private GameState gameState;
     private KeyBoard keyBoard;
+    private MouseInput mouseInput;
     /**
      * Creates new form Window
      */
@@ -46,12 +49,15 @@ public class Window extends javax.swing.JFrame implements Runnable{
         setLocationRelativeTo(null);
         canvas = new Canvas();
         keyBoard = new KeyBoard();
+        mouseInput = new MouseInput();
         canvas.setPreferredSize(new Dimension(Constants.WIDTH, Constants.HEIGHT));
         canvas.setMaximumSize(new Dimension(Constants.WIDTH, Constants.HEIGHT));
         canvas.setMinimumSize(new Dimension(Constants.WIDTH, Constants.HEIGHT));
         canvas.setFocusable(true);
         add(canvas);
         canvas.addKeyListener(keyBoard);
+        canvas.addMouseListener(mouseInput);
+        canvas.addMouseMotionListener(mouseInput);
         setVisible(true);
     }
 
@@ -123,7 +129,7 @@ public class Window extends javax.swing.JFrame implements Runnable{
     
     private void update(){
         keyBoard.update();
-        gameState.update();
+        State.getCurrentState().update();
     }
     
     private void draw(){
@@ -134,11 +140,11 @@ public class Window extends javax.swing.JFrame implements Runnable{
         g = bs.getDrawGraphics();
         //-------------------------------------------
             //g.clearRect(0,0,getSize().width,getSize().height);
-            g.clearRect(0, 0,WIDTH,HEIGHT);
+            g.clearRect(0, 0,Constants.WIDTH,Constants.HEIGHT);
             g.setColor(Color.BLACK);
-            g.fillRect(0,0,WIDTH,HEIGHT);
+            g.fillRect(0,0,Constants.WIDTH,Constants.HEIGHT);
             //g.drawImage(Assets.player, 100, 100, null);
-            gameState.draw(g);
+            State.getCurrentState().draw(g);
             g.setColor(Color.WHITE);
             g.drawString("FPS: "+AVERAGEFPS, 20, 575);
         //-------------------------------------------
@@ -149,7 +155,7 @@ public class Window extends javax.swing.JFrame implements Runnable{
     
     private void init(){
         Assets.init();
-        gameState = new GameState();
+        State.changeState(new MenuState());
     }
     
     @Override

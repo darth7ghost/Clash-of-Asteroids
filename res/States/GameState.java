@@ -22,7 +22,7 @@ import java.util.ArrayList;
  *
  * @author Oscar Sierra
  */
-public class GameState {
+public class GameState extends State{
     private Player player;
     private ArrayList<MovingObject> movingObjects = new ArrayList<MovingObject>();
     private ArrayList<Animation> explotions = new ArrayList<Animation>();

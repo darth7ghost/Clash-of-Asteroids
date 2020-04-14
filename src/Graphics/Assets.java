@@ -60,11 +60,11 @@ public class Assets {
         fontM = Loader.loadFont("/Fonts/Borda Bold.ttf", 20);
         //Sounds
         bgMusic = Loader.loadSound("/Sounds/backgroundMusic.wav");
-//        explosion = Loader.loadSound("/Sounds/explosion.mp3");
-//        playerLoose = Loader.loadSound("/Sounds/playerLoose.mp3");
-//        enemyShoot = Loader.loadSound("/Sounds/playerShoot.mp3");
-//        playerShoot = Loader.loadSound("/Sounds/playerShoot.mp3");
-//        powerUp = Loader.loadSound("/Sounds/powerUp.mp3");
+        explosion = Loader.loadSound("/Sounds/explosion.wav");
+        playerLoose = Loader.loadSound("/Sounds/playerLoose.wav");
+        enemyShoot = Loader.loadSound("/Sounds/playerShoot.wav");
+        playerShoot = Loader.loadSound("/Sounds/playerShoot.wav");
+        powerUp = Loader.loadSound("/Sounds/powerUp.wav");
         for(int i = 0; i < bigs.length; i++)
             bigs[i] = Loader.ImageLoader("/Meteors/meteorBrown_big"+(i+1)+".png");
 

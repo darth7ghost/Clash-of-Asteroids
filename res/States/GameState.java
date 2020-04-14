@@ -1,5 +1,6 @@
 package States;
 
+import GameObjects.Chronometer;
 import GameObjects.Constants;
 import GameObjects.Enemy;
 import GameObjects.Message;
@@ -9,9 +10,9 @@ import GameObjects.Player;
 import GameObjects.Size;
 import Graphics.Animation;
 import Graphics.Assets;
+import Graphics.Sound;
 import Graphics.Text;
 import Math.Vector2D;
-import com.sun.prism.paint.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -23,6 +24,8 @@ import java.util.ArrayList;
  * @author Oscar Sierra
  */
 public class GameState extends State{
+    public static final Vector2D PLAYER_START_POSITION = new Vector2D(Constants.WIDTH/2-Assets.player.getWidth()/2,
+            Constants.HEIGHT/2 - Assets.player.getHeight()/2);
     private Player player;
     private ArrayList<MovingObject> movingObjects = new ArrayList<MovingObject>();
     private ArrayList<Animation> explotions = new ArrayList<Animation>();
@@ -31,13 +34,21 @@ public class GameState extends State{
     private int lives = 3;
     private int meteors;
     private int waves = 1;
+    private Sound bgMusic;
+    private Chronometer gameOverTimer;
+    private boolean gameOver;
     
     public GameState(){
-        player = new Player(new Vector2D(Constants.WIDTH/2-Assets.player.getWidth()/2, 350), new Vector2D(),
+        player = new Player(PLAYER_START_POSITION, new Vector2D(),
                 Constants.PLAYER_MAX_VEL, Assets.player, this);
+        gameOverTimer = new Chronometer();
+        gameOver = false;
         movingObjects.add(player);
         meteors = 1;
         startWave();
+        bgMusic = new Sound(Assets.bgMusic);
+        //bgMusic.loop();
+        bgMusic.changeVolume(-10.0f);
     }
     
     public void addScore(int value, Vector2D position){
@@ -137,6 +148,11 @@ public class GameState extends State{
                 explotions.remove(i);
             }
         }
+        /****/
+        if(gameOver && !gameOverTimer.isRunning()){
+            State.changeState(new MenuState());
+        }
+        /****/
         for(int i=0; i<movingObjects.size(); i++){
             if(movingObjects.get(i)instanceof Meteor){
                 return;
@@ -173,6 +189,9 @@ public class GameState extends State{
     }
     
     private void drawLives(Graphics g){
+        if(lives<1){
+            return;
+        }
         Vector2D livePosition = new Vector2D(25, 35);
         g.drawImage(Assets.life, (int)livePosition.getX(), (int)livePosition.getY(), null);
         g.drawImage(Assets.nums[10], (int)livePosition.getX() + 40,
@@ -205,7 +224,17 @@ public class GameState extends State{
         return player;
     }
     
-    public void substractLife(){
+    public boolean substractLife(){
         lives--;
+        return lives > 0;
+    }
+    
+    public void gameOver(){
+        Message gameOverMag = new Message(
+            PLAYER_START_POSITION, true, "FIN DEL JUEGO", java.awt.Color.white,
+            true, Assets.fontB, this);
+        this.messages.add(gameOverMag);
+        gameOverTimer.run(Constants.GAME_OVER_TIME);
+        gameOver = true;
     }
 }

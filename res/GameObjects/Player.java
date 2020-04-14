@@ -25,7 +25,7 @@ public class Player extends MovingObject {
     private Chronometer fireRate;
     private boolean spawning, visible;
     private Chronometer spawnTime, flickerTime;
-    private Sound shoot;
+    private Sound shoot, loose;
 
     public Player(Vector2D position, Vector2D velocity, double maxVel, BufferedImage texture, GameState gameState) {
         super(position, velocity, maxVel, texture, gameState);
@@ -34,7 +34,8 @@ public class Player extends MovingObject {
         fireRate = new Chronometer();
         spawnTime = new Chronometer();
         flickerTime = new Chronometer();
-        //shoot = new Sound(Assets.playerShoot);
+        shoot = new Sound(Assets.playerShoot);
+        loose = new Sound(Assets.playerLoose);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class Player extends MovingObject {
                     heading, 10, angle, Assets.blueLaser, gameState
             ));
             fireRate.run(Constants.FIRERATE);
-            //shoot.play();
+            shoot.play();
         }
         if(KeyBoard.RIGHT){
             angle+=DELTAANGLE;
@@ -99,14 +100,18 @@ public class Player extends MovingObject {
     public void Destroy(){
         spawning = true;
         spawnTime.run(Constants.SPAWNING_TIME);
+        loose.play();
+        if(!gameState.substractLife()){
+            gameState.gameOver();
+            super.Destroy();
+        }
         resetValues();
-        gameState.substractLife();
     }
     
     private void resetValues(){
         angle=0;
         velocity = new Vector2D();
-        position = new Vector2D(Constants.WIDTH/2-Assets.player.getWidth()/2, 350);
+        position = GameState.PLAYER_START_POSITION;
     }
     
     @Override

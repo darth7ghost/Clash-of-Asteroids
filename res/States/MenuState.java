@@ -15,7 +15,7 @@ public class MenuState extends State {
     private ArrayList<Button> buttons;
     
     public MenuState(){
-        buttons = new ArrayList<Button>();
+        buttons = new ArrayList<>();
         //1 Jugador
         buttons.add(new Button(
             Assets.bluebtn, Assets.bluebtnp,

@@ -1,6 +1,7 @@
 package GameObjects;
 
 import Graphics.Assets;
+import Graphics.Sound;
 import Math.Vector2D;
 import States.GameState;
 import java.awt.Graphics;
@@ -19,6 +20,7 @@ public class Enemy extends MovingObject{
     private int index;
     private boolean following;
     private Chronometer fireRate;
+    private Sound shoot;
 
     public Enemy(Vector2D position, Vector2D velocity, double maxVel, BufferedImage texture,
                     ArrayList<Vector2D> path, GameState gameState) {
@@ -28,6 +30,7 @@ public class Enemy extends MovingObject{
             following = true;
             fireRate = new Chronometer();
             fireRate.run(Constants.ENEMY_FIRE_RATE);
+            shoot = new Sound(Assets.enemyShoot);
     }
 	
     private Vector2D pathFollowing() {
@@ -86,6 +89,7 @@ public class Enemy extends MovingObject{
                             );
             gameState.getMovingObjects().add(0, laser);
             fireRate.run(Constants.ENEMY_FIRE_RATE);
+            shoot.play();
         }
         angle += 0.01;
         //collidesWidth();

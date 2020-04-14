@@ -1,5 +1,7 @@
 package GameObjects;
 
+import Graphics.Assets;
+import Graphics.Sound;
 import Math.Vector2D;
 import States.GameState;
 import java.awt.Graphics;
@@ -20,6 +22,7 @@ public abstract class MovingObject extends GameObject{
     protected int width;
     protected int height;
     protected GameState gameState;
+    private Sound explosion;
 
     public MovingObject(Vector2D position, Vector2D velocity, double maxVel, BufferedImage texture, GameState gameState) {
         super(position, texture);
@@ -29,6 +32,7 @@ public abstract class MovingObject extends GameObject{
         width = texture.getWidth();
         height = texture.getHeight();
         angle = 0;
+        explosion = new Sound(Assets.explosion);
     }
     
     protected void collidesWidth(){
@@ -62,6 +66,9 @@ public abstract class MovingObject extends GameObject{
     
     protected void Destroy(){
         gameState.getMovingObjects().remove(this);
+        if(!(this instanceof Laser)){
+            explosion.play();
+        }
     }
     
     protected Vector2D getCenter(){

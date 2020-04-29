@@ -11,7 +11,6 @@ import GameObjects.Size;
 import Graphics.Animation;
 import Graphics.Assets;
 import Graphics.Sound;
-import Graphics.Text;
 import Math.Vector2D;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -39,7 +38,7 @@ public class GameState extends State{
     private boolean gameOver;
     
     public GameState(){
-        player = new Player(PLAYER_START_POSITION, new Vector2D(),
+        player = new Player(new Vector2D(Constants.WIDTH/2-Assets.player.getWidth()/2, 350), new Vector2D(),
                 Constants.PLAYER_MAX_VEL, Assets.player, this);
         gameOverTimer = new Chronometer();
         gameOver = false;
@@ -137,6 +136,7 @@ public class GameState extends State{
                         ));
     }
     
+    @Override
     public void update(){
         for(int i=0; i<movingObjects.size(); i++){
             movingObjects.get(i).update();
@@ -153,6 +153,7 @@ public class GameState extends State{
             State.changeState(new MenuState());
         }
         /****/
+        gameOverTimer.update();
         for(int i=0; i<movingObjects.size(); i++){
             if(movingObjects.get(i)instanceof Meteor){
                 return;
@@ -161,6 +162,7 @@ public class GameState extends State{
         startWave();
     }
     
+    @Override
     public void draw(Graphics g){
         Graphics2D g2d = (Graphics2D)g;
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);

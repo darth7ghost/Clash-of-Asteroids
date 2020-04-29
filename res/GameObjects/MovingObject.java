@@ -1,10 +1,9 @@
-package GameObjects;
+    package GameObjects;
 
 import Graphics.Assets;
 import Graphics.Sound;
 import Math.Vector2D;
 import States.GameState;
-import java.awt.Graphics;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;

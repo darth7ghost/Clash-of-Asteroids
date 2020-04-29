@@ -38,7 +38,7 @@ public class MenuState extends State {
             new Action(){
                 @Override
                 public void doAction(){
-                    //State.changeState(new GameState());
+                    State.changeState(new GameState());
                 }
             }
         ));

@@ -9,7 +9,6 @@ import GameObjects.Constants;
 import Graphics.Assets;
 import Input.KeyBoard;
 import Input.MouseInput;
-import States.GameState;
 import States.MenuState;
 import States.State;
 import java.awt.Canvas;
@@ -56,8 +55,11 @@ public class Window extends javax.swing.JFrame implements Runnable{
         canvas.setFocusable(true);
         add(canvas);
         canvas.addKeyListener(keyBoard);
+        addKeyListener(keyBoard);
         canvas.addMouseListener(mouseInput);
+        addMouseListener(mouseInput);
         canvas.addMouseMotionListener(mouseInput);
+        addMouseMotionListener(mouseInput);
         setVisible(true);
     }
 
